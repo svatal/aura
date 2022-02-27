@@ -1,11 +1,11 @@
 import * as b from "bobril";
 import { init, IProp, useState } from "bobril";
 import { Fullscreen } from "./fullscreen";
+import { Button } from "./button";
 
 function App() {
   const auraLen = useState(150);
-  const dist1 = useState(50);
-  const dist2 = useState(60);
+  const dists = useState([50]);
   const currentAge = useState(45);
 
   return (
@@ -13,37 +13,69 @@ function App() {
       <div
         style={{
           display: "inline-grid",
-          gridTemplateColumns: "max-content max-content max-content",
+          gridTemplateColumns: `repeat(${dists().length + 2}, max-content)`,
           gap: 10,
         }}
       >
         <label>Šířka aury</label>
         <NumberInput value={auraLen} />
-        <div />
+        {dists().map(() => (
+          <div />
+        ))}
 
         <label>Věk</label>
         <NumberInput value={currentAge} />
-        <div />
+        {dists().map(() => (
+          <div />
+        ))}
 
         <label>Od těla</label>
-        <NumberInput value={dist1} />
-        <NumberInput value={dist2} />
+        {dists().map((value, idx) => (
+          <NumberInput
+            value={b.prop(value, (newVal) =>
+              dists(dists().map((origVal, i) => (idx === i ? newVal : origVal)))
+            )}
+          />
+        ))}
+        <div>
+          <Button
+            color="green"
+            text="+"
+            onClick={() => dists([...dists(), 50])}
+          />
+        </div>
 
         <label>Před lety</label>
-        <label>{beforeYears(dist1)}</label>
-        <label>{beforeYears(dist2)}</label>
+        {dists().map((dist) => (
+          <label>{beforeYears(dist).toFixed(1)}</label>
+        ))}
+        <div />
 
         <label>V kolika</label>
-        <label>{eventAge(dist1)}</label>
-        <label>{eventAge(dist2)}</label>
+        {dists().map((dist) => (
+          <label>{eventAge(dist).toFixed(1)}</label>
+        ))}
+        <div />
+
+        <label>Smazat</label>
+        {dists().map((_, idx) => (
+          <div>
+            <Button
+              color="red"
+              text="X"
+              onClick={() => dists(dists().filter((_, i) => i !== idx))}
+            />
+          </div>
+        ))}
+        <div />
       </div>
     </Fullscreen>
   );
 
-  function beforeYears(dist: IProp<number>) {
-    return (dist() / auraLen()) * currentAge();
+  function beforeYears(dist: number) {
+    return (dist / auraLen()) * currentAge();
   }
-  function eventAge(dist: IProp<number>) {
+  function eventAge(dist: number) {
     return currentAge() - beforeYears(dist);
   }
 }
