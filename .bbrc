@@ -1,6 +1,6 @@
 {
    "title": "Aura",
-   "head": "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /> <link rel=\"icon\" href=\"favicon.ico\">",
+   "head": "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /> <link rel=\"icon\" href=\"aura_39386_128.png\"> <link rel=\"manifest\" href=\"manifest.json\">",
    "additionalResourcesDirectory": "assets",
    "buildOutputDir": "docs"
 }
